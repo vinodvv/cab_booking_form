@@ -6,4 +6,13 @@ h1 {
 
 .table a{
     text-decoration: None;
+    white-space: nowrap;
+    width: 100%;
 }
+
+td {
+    max-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+

@@ -5,15 +5,18 @@
         <div class="card mx-auto border-dark mb-4" style="width: 65%;">
             <div class="card-header" style="text-align: center; color: indigo;"><h1>Cab booking details</h1></div>
             <ul class="list-group list-group-flush">
-                <li class="list-group-item">{{ booking.name }}</li>
-                <li class="list-group-item">Date: {{ booking.date }}, Time: {{ booking.time }} hrs</li>
+                <li class="list-group-item display-6" style="text-align: center;">{{ booking.name }}</li>
+                <li class="list-group-item" style="text-align: center;"><strong>Date: {{ booking.date }}, Time: {{ booking.time }} hrs</strong></li>
                 <li class="list-group-item">Picup Address: {{ booking.pickup }}</li>
                 <li class="list-group-item">Drop at: {{ booking.drop }}</li>
                 <li class="list-group-item">Vehicle: {{ booking.vehicle }}</li>
             </ul>
         </div>
-        <a href="{{ url_for('booking_list') }}">Back to list</a>
-        <p><a href="{{ url_for('booking_update', booking_id=booking.id) }}">Update</a></p>
+        <div class="container mt-4 mb-4 mx-auto" style="width: 30%;">
+            <a class="btn btn-primary btn-lg" href="{{ url_for('booking_list') }}">Back to list</a>
+            <a class="btn btn-secondary btn-lg" href="{{ url_for('booking_update', booking_id=booking.id) }}">Update</a>
+            <a class="btn btn-danger btn-lg" href="{{ url_for('booking_delete', booking_id=booking.id) }}">Delete</a>
+        </div>
     </div>
 
 {% endblock content %}

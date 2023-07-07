@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, flash, redirect
+from flask import Flask, render_template, request, flash, redirect, abort
 from flask_mail import Mail, Message
 
 from models import db, Form
@@ -136,8 +136,8 @@ def booking_update(booking_id):
             name = request.form["name"].title()
             mobile = request.form["mobile"]
             email = request.form["email"]
-            pickup = request.form["from"].upper()
-            drop = request.form["to"].upper()
+            pickup = request.form["from"]
+            drop = request.form["to"]
             date = request.form["date"]
             date_obj = datetime.strptime(date, "%Y-%m-%d")
             time = request.form["time"]
@@ -154,6 +154,24 @@ def booking_update(booking_id):
         return f"Booking details doesn't exist."
 
     return render_template("update.html", booking=booking)
+
+
+@app.route("/delete/<int:booking_id>", methods=['GET', 'POST'])
+def booking_delete(booking_id):
+    try:
+        booking = Form.query.filter_by(id=booking_id).first()
+        if request.method == 'POST':
+            if booking:
+                db.session.delete(booking)
+                db.session.commit()
+                return redirect("/list")
+            else:
+
+                return "Booking not found."
+    except Exception as e:
+        return f'Error deleting booking: {str(e)}'
+
+    return render_template('delete.html')
 
 
 if __name__ == "__main__":

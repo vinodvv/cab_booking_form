@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="container mt-4 mb-4 mx-auto" style="text-align: center;">
+        <form action="" method="post">
+            <h1 class="mt-4 mb-4">Click Yes to confirm!</h1>
+
+            <input class="btn btn-danger btn-lg" type="submit" value="YES">
+            <a class="btn btn-secondary btn-lg" href="{{ url_for('booking_list') }}">Cancel</a>
+        </form>
+    </div>
+{% endblock content %}
