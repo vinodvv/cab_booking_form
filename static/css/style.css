@@ -1,0 +1,13 @@
+/* Table pagination styling */
+.paging-nav {
+    text-align: right;
+    padding-top: 2px;
+    font-size: 20px;
+    padding-bottom: 10px;
+}
+
+.paging-nav .selected-page {
+    background: #187ed5;
+    font-weight: bold;
+}
+
