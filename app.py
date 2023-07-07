@@ -87,10 +87,25 @@ def book_cab():
     return render_template("book_cab.html", entries=entries)
 
 
+# set the number of records per page
+BOOKINGS_PER_PAGE = 10
+
+
 @app.route("/list")
 def booking_list():
-    bookings = Form.query.all()
-    return render_template('list.html', bookings=bookings)
+    # Get the page number from the query parameters, default to 1
+    page = request.args.get('page', 1, type=int)
+
+    # Retrieve the total number of records
+    total_bookings = Form.query.count()
+
+    # Calculate the total number of pages
+    total_pages = (total_bookings // BOOKINGS_PER_PAGE) + (1 if total_bookings % BOOKINGS_PER_PAGE != 0 else 0)
+
+    # Retrieve the subset of records for the current page
+    bookings = Form.query.paginate(page=page, per_page=BOOKINGS_PER_PAGE)
+
+    return render_template('list.html', bookings=bookings, total_pages=total_pages)
 
 
 @app.route('/search', methods=['GET', 'POST'])

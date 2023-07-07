@@ -36,5 +36,28 @@
                 {% endfor %}
             </tbody>
         </table>
+        <div class="page_num mt-4 mb-4" style="text-align: right;">
+            {% if bookings.has_prev %}
+                <a href="?page={{ bookings.prev_num }}">Previous</a>
+            {% endif %}
+
+            {% for num in bookings.iter_pages() %}
+                {% if num %}
+                    {% if bookings.page == num %}
+                        <strong>{{ num }}</strong>
+                    {% else %}
+                        <a href="?page={{ num }}">{{ num }}</a>
+                    {% endif %}
+                {% else %}
+
+                {% endif %}
+            {% endfor %}
+
+            {% if bookings.has_next %}
+                <a href="?page={{ bookings.next_num }}">Next</a>
+            {% endif %}
+        </div>
+
+        <p style="text-align: right;">Page {{ bookings.page }} of {{ total_pages }}</p>
     </div>
 {% endblock content %}
