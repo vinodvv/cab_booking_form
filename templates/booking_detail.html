@@ -2,8 +2,8 @@
 {% block content %}
 
     <div class="container mt-4 mb-4">
-        <div class="card border-dark mb-3" style="width: 80%;">
-            <div class="card-header"><h1>Cab booking details</h1></div>
+        <div class="card mx-auto border-dark mb-4" style="width: 65%;">
+            <div class="card-header" style="text-align: center; color: indigo;"><h1>Cab booking details</h1></div>
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">{{ booking.name }}</li>
                 <li class="list-group-item">Date: {{ booking.date }}, Time: {{ booking.time }} hrs</li>
@@ -13,6 +13,7 @@
             </ul>
         </div>
         <a href="{{ url_for('booking_list') }}">Back to list</a>
+        <p><a href="{{ url_for('booking_update', booking_id=booking.id) }}">Update</a></p>
     </div>
 
 {% endblock content %}

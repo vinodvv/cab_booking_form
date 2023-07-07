@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, flash
+from flask import Flask, render_template, request, flash, redirect
 from flask_mail import Mail, Message
 
 from models import db, Form
@@ -114,7 +114,7 @@ def search():
     if request.method == 'POST':
         search_query = request.form['search_query']
         matching_records = Form.query.filter(Form.name.ilike(f"%{search_query}%")).all()
-        return render_template('list.html', bookings=matching_records)
+        return render_template('search.html', bookings=matching_records)
     return render_template('list.html', bookings=bookings)
 
 
@@ -124,6 +124,36 @@ def booking_detail(booking_id):
     if booking:
         return render_template("booking_detail.html", booking=booking)
     return f"Cab booking details not available."
+
+@app.route("/update/<int:booking_id>", methods=["GET", "POST"])
+def booking_update(booking_id):
+    booking = Form.query.filter_by(id=booking_id).first()
+    if request.method == 'POST':
+        if booking:
+            db.session.delete(booking)
+            db.session.commit()
+
+            name = request.form["name"].title()
+            mobile = request.form["mobile"]
+            email = request.form["email"]
+            pickup = request.form["from"].upper()
+            drop = request.form["to"].upper()
+            date = request.form["date"]
+            date_obj = datetime.strptime(date, "%Y-%m-%d")
+            time = request.form["time"]
+            time_obj = datetime.strptime(time, "%H:%M").time()
+            vehicle = request.form["vehicle"]
+
+            booking = Form(name=name, mobile=mobile, email=email, pickup=pickup, drop=drop,
+                           date=date_obj, time=time_obj, vehicle=vehicle)
+
+            db.session.add(booking)
+            db.session.commit()
+            return redirect("/list")
+
+        return f"Booking details doesn't exist."
+
+    return render_template("update.html", booking=booking)
 
 
 if __name__ == "__main__":

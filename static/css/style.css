@@ -1,13 +1,9 @@
-/* Table pagination styling */
-.paging-nav {
-    text-align: right;
-    padding-top: 2px;
-    font-size: 20px;
-    padding-bottom: 10px;
+h1 {
+    text-align: center;
+    text-transform: uppercase;
+    color: indigo;
 }
 
-.paging-nav .selected-page {
-    background: #187ed5;
-    font-weight: bold;
+.table a{
+    text-decoration: None;
 }
-
