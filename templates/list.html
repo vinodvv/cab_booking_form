@@ -1,63 +1,67 @@
 {% extends 'base.html' %}
 {% block content %}
     <div class="container">
-        <h1 class="mt-4 mb-4">List of Cab Bookings</h1>
+        {% if message %}
+            <p class="mt-4 mb-4 display-6" style="text-align: center;"><strong>{{ message }}</strong></p>
+        {% else %}
+            <h1 class="mt-4 mb-4">List of Cab Bookings</h1>
 
-        <form action="{{ url_for('search') }}" method="POST">
-            <div class="input-group mb-3">
-                <input type="text" class="form-control" placeholder="Enter a name to search" name="search_query" aria-describedby="button-addon2">
-                <div class="input-group-append">
-                    <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Search</button>
+            <form action="{{ url_for('search') }}" method="POST">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="Enter a name to search" name="search_query" aria-describedby="button-addon2">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Search</button>
+                    </div>
                 </div>
-            </div>
-        </form>
+            </form>
 
-        <table class="table table-striped table-hover">
-            <thead class="table-dark">
-                <tr class="table-active">
-                    <th>No</th>
-                    <th>DATE</th>
-                    <th>TIME</th>
-                    <th>NAME</th>
-                    <th>PICKUP FROM</th>
-                    <th>DROP AT</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for booking in bookings %}
-                    <tr>
-                        <td>{{ loop.index }}</td>
-                        <td>{{ booking.date }}</td>
-                        <td>{{ booking.time }}</td>
-                        <td><a href="{{ url_for('booking_detail', booking_id=booking.id) }}">{{ booking.name }}</a></td>
-                        <td>{{ booking.pickup }}</td>
-                        <td>{{ booking.drop }}</td>
+            <table class="table table-striped table-hover">
+                <thead class="table-dark">
+                    <tr class="table-active">
+                        <th>No</th>
+                        <th>DATE</th>
+                        <th>TIME</th>
+                        <th>NAME</th>
+                        <th>PICKUP FROM</th>
+                        <th>DROP AT</th>
                     </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        <div class="page_num mt-4 mb-4" style="text-align: right;">
-            {% if bookings.has_prev %}
-                <a href="?page={{ bookings.prev_num }}">Previous</a>
-            {% endif %}
-
-            {% for num in bookings.iter_pages() %}
-                {% if num %}
-                    {% if bookings.page == num %}
-                        <strong>{{ num }}</strong>
-                    {% else %}
-                        <a href="?page={{ num }}">{{ num }}</a>
-                    {% endif %}
-                {% else %}
-
+                </thead>
+                <tbody>
+                    {% for booking in bookings %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>{{ booking.date }}</td>
+                            <td>{{ booking.time }}</td>
+                            <td><a href="{{ url_for('booking_detail', booking_id=booking.id) }}">{{ booking.name }}</a></td>
+                            <td>{{ booking.pickup }}</td>
+                            <td>{{ booking.drop }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div class="page_num mt-4 mb-4" style="text-align: right;">
+                {% if bookings.has_prev %}
+                    <a href="?page={{ bookings.prev_num }}">Previous</a>
                 {% endif %}
-            {% endfor %}
 
-            {% if bookings.has_next %}
-                <a href="?page={{ bookings.next_num }}">Next</a>
-            {% endif %}
-        </div>
+                {% for num in bookings.iter_pages() %}
+                    {% if num %}
+                        {% if bookings.page == num %}
+                            <strong>{{ num }}</strong>
+                        {% else %}
+                            <a href="?page={{ num }}">{{ num }}</a>
+                        {% endif %}
+                    {% else %}
 
-        <p style="text-align: right;">Page {{ bookings.page }} of {{ total_pages }}</p>
+                    {% endif %}
+                {% endfor %}
+
+                {% if bookings.has_next %}
+                    <a href="?page={{ bookings.next_num }}">Next</a>
+                {% endif %}
+            </div>
+
+            <p style="text-align: right;">Page {{ bookings.page }} of {{ total_pages }}</p>
+        {% endif %}
     </div>
 {% endblock content %}

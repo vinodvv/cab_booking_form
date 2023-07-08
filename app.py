@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, flash, redirect, abort
+from flask import Flask, render_template, request, flash, redirect, abort, url_for
 from flask_mail import Mail, Message
 
 from models import db, Form
@@ -33,8 +33,8 @@ def book_cab():
         name = request.form["name"].title()
         mobile = request.form["mobile"]
         email = request.form["email"]
-        pickup = request.form["from"].upper()
-        drop = request.form["to"].upper()
+        pickup = request.form["from"]
+        drop = request.form["to"]
         date = request.form["date"]
         date_obj = datetime.strptime(date, "%Y-%m-%d")
         formated_date = date_obj.strftime("%d-%B-%Y")
@@ -93,19 +93,26 @@ BOOKINGS_PER_PAGE = 10
 
 @app.route("/list")
 def booking_list():
-    # Get the page number from the query parameters, default to 1
-    page = request.args.get('page', 1, type=int)
+    bookings = Form.query.all()
+    if not bookings:
+        message = f"No records available. Please select 'Booking Form' to add new records."
+    else:
+        message = None
+        # Get the page number from the query parameters, default to 1
+        page = request.args.get('page', 1, type=int)
 
-    # Retrieve the total number of records
-    total_bookings = Form.query.count()
+        # Retrieve the total number of records
+        total_bookings = Form.query.count()
 
-    # Calculate the total number of pages
-    total_pages = (total_bookings // BOOKINGS_PER_PAGE) + (1 if total_bookings % BOOKINGS_PER_PAGE != 0 else 0)
+        # Calculate the total number of pages
+        total_pages = (total_bookings // BOOKINGS_PER_PAGE) + (1 if total_bookings % BOOKINGS_PER_PAGE != 0 else 0)
 
-    # Retrieve the subset of records for the current page
-    bookings = Form.query.paginate(page=page, per_page=BOOKINGS_PER_PAGE)
+        # Retrieve the subset of records for the current page
+        bookings = Form.query.paginate(page=page, per_page=BOOKINGS_PER_PAGE)
 
-    return render_template('list.html', bookings=bookings, total_pages=total_pages)
+        return render_template('list.html', bookings=bookings, total_pages=total_pages)
+
+    return render_template('list.html', bookings=bookings, message=message)
 
 
 @app.route('/search', methods=['GET', 'POST'])
@@ -125,6 +132,7 @@ def booking_detail(booking_id):
         return render_template("booking_detail.html", booking=booking)
     return f"Cab booking details not available."
 
+
 @app.route("/update/<int:booking_id>", methods=["GET", "POST"])
 def booking_update(booking_id):
     booking = Form.query.filter_by(id=booking_id).first()
@@ -141,7 +149,7 @@ def booking_update(booking_id):
             date = request.form["date"]
             date_obj = datetime.strptime(date, "%Y-%m-%d")
             time = request.form["time"]
-            time_obj = datetime.strptime(time, "%H:%M").time()
+            time_obj = datetime.strptime(time, "%H:%M:%S").time()
             vehicle = request.form["vehicle"]
 
             booking = Form(name=name, mobile=mobile, email=email, pickup=pickup, drop=drop,
@@ -166,12 +174,16 @@ def booking_delete(booking_id):
                 db.session.commit()
                 return redirect("/list")
             else:
-
                 return "Booking not found."
     except Exception as e:
         return f'Error deleting booking: {str(e)}'
 
     return render_template('delete.html')
+
+
+@app.route("/about")
+def about():
+    return render_template('about.html')
 
 
 if __name__ == "__main__":
