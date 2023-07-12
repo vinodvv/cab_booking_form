@@ -1,7 +1,14 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <div class="container mt-4 mb-4">
-        <h1>Cab Booking Web App</h1>
+    <div class="container mt-4 mb-4" style="text-align: center;">
+        <div class="column">
+            <h1>Cab Booking Web App</h1>
+        </div>
+
+        <a class="column" href="#">
+            <img src="{{ url_for('static', filename='img/image_car.jpg') }}"
+                 width="1200" height="800" class="align-center" alt="">
+        </a>
     </div>
 {% endblock content %}
